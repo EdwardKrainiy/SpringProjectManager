@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Basic Account class.
+ * Basic Project class.
  *
  * @author Edvard Krainiy on 02/04/2022
  */
@@ -47,4 +47,7 @@ public class Project {
 
   @Column(name = JpaMappingDetails.ISSUED_AT)
   private LocalDateTime issuedAt;
+
+  @Column(name = JpaMappingDetails.IS_DELETED)
+  private boolean isDeleted;
 }

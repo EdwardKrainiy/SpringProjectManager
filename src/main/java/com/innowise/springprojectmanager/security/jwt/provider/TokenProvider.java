@@ -35,9 +35,6 @@ public class TokenProvider implements Serializable {
   @Value("${jwt.auth.token.expiration.time.multiplicator}")
   private int authTokenExpirationTimeMultiplicator;
 
-  @Value("${jwt.confirm.token.expiration.time.multiplicator}")
-  private int confirmTokenExpirationTimeMultiplicator;
-
   @Value("${jwt.authorities.key}")
   private String authoritiesKey;
 
@@ -128,24 +125,6 @@ public class TokenProvider implements Serializable {
             new Date(
                 System.currentTimeMillis() + tokenValidity * authTokenExpirationTimeMultiplicator))
         .signWith(SignatureAlgorithm.HS256, signingKey)
-        .compact();
-  }
-
-  /**
-   * generateConfirmToken method. Generates JWT to confirm email.
-   *
-   * @param userId Id of user we need to confirm and activate.
-   * @return String Returns us generated JWT for confirmation.
-   */
-  public String generateConfirmToken(Long userId) {
-    return Jwts.builder()
-        .setSubject(userId.toString())
-        .setIssuedAt(new Date(System.currentTimeMillis()))
-        .setExpiration(
-            new Date(
-                System.currentTimeMillis()
-                    + tokenValidity * confirmTokenExpirationTimeMultiplicator))
-        .signWith(SignatureAlgorithm.HS256, confirmationKey)
         .compact();
   }
 

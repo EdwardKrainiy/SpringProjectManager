@@ -1,6 +1,7 @@
 package com.innowise.springprojectmanager.security.jwt.filter;
 
 import com.innowise.springprojectmanager.security.jwt.provider.TokenProvider;
+import com.innowise.springprojectmanager.service.impl.CustomUserDetailsService;
 import com.innowise.springprojectmanager.utils.literal.PropertySourceClasspath;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
@@ -17,7 +18,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -30,7 +30,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @PropertySource(PropertySourceClasspath.JWT_PROPERTIES_CLASSPATH)
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-  @Autowired private UserDetailsService customUserDetailsService;
+  @Autowired private CustomUserDetailsService customUserDetailsService;
 
   @Autowired private TokenProvider jwtTokenUtil;
 

@@ -20,6 +20,7 @@ public class JpaMappingDetails {
   public static final String ISSUED_AT = "issued_at";
   public static final String PROJECT_TITLE = "title";
   public static final String PROJECT_DESCRIPTION = "description";
+  public static final String IS_DELETED = "is_deleted";
 
   private JpaMappingDetails() {}
 }
