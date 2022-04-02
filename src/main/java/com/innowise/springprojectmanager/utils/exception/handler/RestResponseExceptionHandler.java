@@ -2,6 +2,7 @@ package com.innowise.springprojectmanager.utils.exception.handler;
 
 import com.innowise.springprojectmanager.model.exception.ApiErrorDto;
 import com.innowise.springprojectmanager.utils.exception.EntityNotFoundException;
+import com.innowise.springprojectmanager.utils.exception.ValidationException;
 import com.innowise.springprojectmanager.utils.literal.LogMessage;
 import java.util.HashSet;
 import java.util.Set;
@@ -52,5 +53,12 @@ public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler
     ApiErrorDto exceptionError = new ApiErrorDto(HttpStatus.NOT_FOUND.value(), ex.getMessage());
 
     return new ResponseEntity<>(exceptionError, HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(value = {ValidationException.class})
+  protected ResponseEntity<ApiErrorDto> handleValidationException(ValidationException ex) {
+    ApiErrorDto exceptionError = new ApiErrorDto(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+
+    return new ResponseEntity<>(exceptionError, HttpStatus.BAD_REQUEST);
   }
 }
