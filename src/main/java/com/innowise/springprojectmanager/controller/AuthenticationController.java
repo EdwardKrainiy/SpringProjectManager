@@ -1,6 +1,7 @@
 package com.innowise.springprojectmanager.controller;
 
 import com.innowise.springprojectmanager.model.dto.user.UserSignInDto;
+import com.innowise.springprojectmanager.model.dto.user.UserSignUpDto;
 import com.innowise.springprojectmanager.service.UserService;
 import com.innowise.springprojectmanager.utils.JsonEntitySerializer;
 import com.innowise.springprojectmanager.utils.literal.LogMessage;
@@ -14,9 +15,11 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -67,5 +70,47 @@ public class AuthenticationController {
               jsonEntitySerializer.serializeObjectToJson(userSignInDto)));
     }
     return userService.authenticateUser(userSignInDto);
+  }
+
+  @PostMapping("/sign-up")
+  public ResponseEntity<Void> signUp(
+      @RequestBody
+      @Valid
+      @ApiParam(name = "userSignUpDto", value = "Dto of user, which we want to sign up.")
+          UserSignUpDto userSignUpDto) {
+
+    if (log.isDebugEnabled()) {
+      log.debug(
+          String.format(
+              LogMessage.DEBUG_REQUEST_BODY_LOG,
+              jsonEntitySerializer.serializeObjectToJson(userSignUpDto)));
+    }
+
+    userService.createUser(userSignUpDto);
+    return ResponseEntity.status(HttpStatus.CREATED).build();
+  }
+
+  /**
+   * Email-confirmation endpoint.
+   *
+   * @param token token of user we need to confirm.
+   * @return ResponseEntity Response, which contains message and HTTP code.
+   */
+  @ApiOperation(value = "Email confirmation.", notes = "Confirms account by token sent to email.")
+  @ApiResponses(
+      value = {
+          @ApiResponse(code = 200, message = "Successful email confirmation."),
+          @ApiResponse(code = 400, message = "Bad request or this user is already activated."),
+          @ApiResponse(
+              code = 403,
+              message = "Accessing the resource you were trying to reach is forbidden"),
+      })
+  @GetMapping("/email-confirmation")
+  public ResponseEntity<Void> emailConfirmation(
+      @RequestParam("token")
+      @ApiParam(name = "token", value = "Token of user, which we want to confirm.")
+          String token) {
+    userService.activateUser(token);
+    return ResponseEntity.ok().build();
   }
 }

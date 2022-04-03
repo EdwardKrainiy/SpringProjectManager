@@ -1,7 +1,7 @@
 package com.innowise.springprojectmanager.security.jwt.filter;
 
 import com.innowise.springprojectmanager.security.jwt.provider.TokenProvider;
-import com.innowise.springprojectmanager.service.impl.CustomUserDetailsService;
+import com.innowise.springprojectmanager.service.user.impl.CustomUserDetailsService;
 import com.innowise.springprojectmanager.utils.literal.PropertySourceClasspath;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;

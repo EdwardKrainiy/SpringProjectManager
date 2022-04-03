@@ -1,5 +1,6 @@
 package com.innowise.springprojectmanager.config;
 
+import com.innowise.springprojectmanager.model.enumeration.Role;
 import com.innowise.springprojectmanager.security.jwt.filter.JwtAuthenticationFilter;
 import com.innowise.springprojectmanager.utils.literal.PropertySourceClasspath;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -37,6 +39,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http.csrf()
         .disable()
         .authorizeRequests()
+        .antMatchers(HttpMethod.POST, "/api/auth/*")
+        .permitAll()
+        .antMatchers(HttpMethod.GET, "/api/auth/email-confirmation")
+        .hasAuthority(Role.ADMIN.name())
+        .antMatchers("/*")
+        .permitAll()
         .anyRequest()
         .permitAll();
 
