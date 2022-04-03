@@ -1,4 +1,4 @@
-package com.innowise.springprojectmanager.service.impl;
+package com.innowise.springprojectmanager.service.user.impl;
 
 import com.innowise.springprojectmanager.repository.UserRepository;
 import com.innowise.springprojectmanager.utils.exception.EntityNotFoundException;
