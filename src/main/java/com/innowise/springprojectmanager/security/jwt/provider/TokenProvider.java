@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 /**
  * TokenProvider class. Methods of this class creates and decodes tokens.
  *
- * @author Edvard Krainiy on 12/10/2021
+ * @author Edvard Krainiy on 02/04/2022
  */
 @Component
 @PropertySource(PropertySourceClasspath.JWT_PROPERTIES_CLASSPATH)
