@@ -72,6 +72,21 @@ public class AuthenticationController {
     return userService.authenticateUser(userSignInDto);
   }
 
+  /**
+   * Sign-up endpoint.
+   *
+   * @param userSignUpDto User object we need to sign-up.
+   * @return ResponseEntity Response, which contains message and HTTP code.
+   */
+  @ApiOperation(value = "Sign up.", notes = "Checks entered credentials and signs up new user.")
+  @ApiResponses(
+      value = {
+          @ApiResponse(code = 201, message = "Successful sign up."),
+          @ApiResponse(
+              code = 400,
+              message =
+                  "Bad request because of invalid values or existing of user with this username or email.")
+      })
   @PostMapping("/sign-up")
   public ResponseEntity<Void> signUp(
       @RequestBody
