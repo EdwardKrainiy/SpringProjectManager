@@ -1,4 +1,4 @@
-package com.innowise.springprojectmanager.service;
+package com.innowise.springprojectmanager.service.user;
 
 import com.innowise.springprojectmanager.model.dto.user.UserDto;
 import com.innowise.springprojectmanager.model.dto.user.UserSignInDto;

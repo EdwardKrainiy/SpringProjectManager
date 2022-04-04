@@ -9,7 +9,7 @@ public class JpaMappingDetails {
   public static final String USERS_TABLE = "users";
   public static final String TASKS_TABLE = "tasks";
   public static final String USER_ID = "user_id";
-  public static final String PROJECT_ID = "user_id";
+  public static final String PROJECT_ID = "project_id";
   public static final String PROJECTS_TABLE = "projects";
   public static final String ID = "id";
   public static final String USERNAME = "username";
@@ -25,6 +25,7 @@ public class JpaMappingDetails {
   public static final String TITLE = "title";
   public static final String DESCRIPTION = "description";
   public static final String DELETED = "deleted";
+  public static final String COMPLETED = "completed";
 
   private JpaMappingDetails() {}
 }

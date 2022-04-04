@@ -12,6 +12,7 @@ public class ExceptionMessage {
   public static final String USER_IS_ALREADY_ACTIVATED = "This user is already activated!";
   public static final String AUTHENTICATED_USER_NOT_FOUND = "Authenticated user not found!";
   public static final String USER_CANNOT_DELETE_HIMSELF = "User can't delete himself!";
+  public static final String PROJECT_NOT_FOUND = "Project not found!";
 
   private ExceptionMessage() {}
 }

@@ -1,4 +1,4 @@
-package com.innowise.springprojectmanager.utils.mapper;
+package com.innowise.springprojectmanager.utils.mapper.user;
 
 import com.innowise.springprojectmanager.model.dto.user.UserDto;
 import com.innowise.springprojectmanager.model.entity.User;

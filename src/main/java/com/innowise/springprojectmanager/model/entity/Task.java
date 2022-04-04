@@ -51,6 +51,9 @@ public class Task {
   @Column(name = JpaMappingDetails.EXPIRES_AT)
   private LocalDateTime expiresAt;
 
+  @Column(name = JpaMappingDetails.COMPLETED)
+  private boolean isCompleted;
+
   @Column(name = JpaMappingDetails.DELETED)
   private boolean isDeleted;
 }

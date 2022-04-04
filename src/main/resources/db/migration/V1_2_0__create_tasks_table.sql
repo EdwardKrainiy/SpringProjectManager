@@ -6,5 +6,6 @@ CREATE TABLE tasks
     description        VARCHAR(320) NULL DEFAULT NULL,
     issued_at          TIMESTAMP,
     expires_at         TIMESTAMP,
-    deleted            BOOLEAN      DEFAULT FALSE
+    deleted            BOOLEAN      DEFAULT FALSE,
+    completed          BOOLEAN      DEFAULT FALSE
 );

@@ -1,7 +1,7 @@
 package com.innowise.springprojectmanager.controller;
 
 import com.innowise.springprojectmanager.model.dto.user.UserDto;
-import com.innowise.springprojectmanager.service.UserService;
+import com.innowise.springprojectmanager.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;

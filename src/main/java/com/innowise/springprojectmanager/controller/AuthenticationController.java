@@ -2,7 +2,7 @@ package com.innowise.springprojectmanager.controller;
 
 import com.innowise.springprojectmanager.model.dto.user.UserSignInDto;
 import com.innowise.springprojectmanager.model.dto.user.UserSignUpDto;
-import com.innowise.springprojectmanager.service.UserService;
+import com.innowise.springprojectmanager.service.user.UserService;
 import com.innowise.springprojectmanager.utils.JsonEntitySerializer;
 import com.innowise.springprojectmanager.utils.literal.LogMessage;
 import io.swagger.annotations.ApiOperation;

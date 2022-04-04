@@ -21,6 +21,8 @@ public class LogMessage {
   public static final String USER_NOT_FOUND_LOG = "User not found. Id of requested user: %d";
   public static final String USER_DELETED_LOG = "User was deleted. Id of user: %d";
   public static final String USER_CANNOT_DELETE_HIMSELF_LOG = "User can't delete himself. Id of user: %d";
+  public static final String PROJECT_NOT_FOUND_LOG = "Project not found. Id of project: %d";
+  public static final String PROJECT_CREATED_LOG = "Project was created. Id of created Project: %d";
 
   private LogMessage() {}
 }
