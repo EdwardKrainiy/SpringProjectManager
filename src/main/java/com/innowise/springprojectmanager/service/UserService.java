@@ -1,8 +1,10 @@
 package com.innowise.springprojectmanager.service;
 
+import com.innowise.springprojectmanager.model.dto.user.UserDto;
 import com.innowise.springprojectmanager.model.dto.user.UserSignInDto;
 import com.innowise.springprojectmanager.model.dto.user.UserSignUpDto;
 import com.innowise.springprojectmanager.model.entity.User;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 
 /**
@@ -19,6 +21,14 @@ public interface UserService {
    * @return Boolean isUserActivated flag.
    */
   boolean isUserActivated(User user);
+
+  /**
+   * isUserDeleted method. Checks, is User deleted.
+   *
+   * @param user User object, which we need to check.
+   * @return Boolean isUserDeleted flag.
+   */
+  boolean isUserDeleted(User user);
 
   /**
    * createUser method. Saves our user on DB.
@@ -45,4 +55,27 @@ public interface UserService {
    * @param token Transferred token of the user we need to activate.
    */
   void activateUser(String token);
+
+  /**
+   * findAllUsers method. Finds all users from DB.
+   *
+   * @return ResponseEntity<List < UserDto>> ResponseEntity with HTTP code and list of all found
+   *     users.
+   */
+  List<UserDto> findAllUsers();
+
+  /**
+   * findUserByUserId. Finds user by id.
+   *
+   * @param userId Id of user we need to find.
+   * @return ResponseEntity<UserDto> ResponseEntity with HTTP code and found user entity.
+   */
+  UserDto findUserByUserId(Long userId);
+
+  /**
+   * deleteUserByUserId method. Deletes user by id.
+   *
+   * @param userId Id of user we need to delete.
+   */
+  void deleteUserByUserId(Long userId);
 }

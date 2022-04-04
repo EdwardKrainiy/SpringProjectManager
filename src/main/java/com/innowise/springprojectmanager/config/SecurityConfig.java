@@ -43,6 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .permitAll()
         .antMatchers(HttpMethod.GET, "/api/auth/email-confirmation")
         .hasAuthority(Role.ADMIN.name())
+        .antMatchers("/api/users/*")
+        .hasAuthority(Role.ADMIN.name())
         .antMatchers("/*")
         .permitAll()
         .anyRequest()
