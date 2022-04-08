@@ -23,6 +23,9 @@ public class LogMessage {
   public static final String USER_CANNOT_DELETE_HIMSELF_LOG = "User can't delete himself. Id of user: %d";
   public static final String PROJECT_NOT_FOUND_LOG = "Project not found. Id of project: %d";
   public static final String PROJECT_CREATED_LOG = "Project was created. Id of created Project: %d";
+  public static final String ID_OF_LOGGED_USER_NOT_EQUALS_ID_OF_PROJECT_LOG =  "Id of logged user not equals id of project. Id of logged User: %d, Id of project user: %d";
+  public static final String PROJECT_DELETED_LOG = "Project was deleted. Id of project: %d";
+  public static final String PROJECT_UPDATED_LOG = "Account was updated. Id of account: %d";
 
   private LogMessage() {}
 }

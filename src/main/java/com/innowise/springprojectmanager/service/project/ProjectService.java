@@ -43,6 +43,13 @@ import java.util.List;
      *     converted into Project object, passed some checks and will be updated on DB.
      * @param projectId Id of project we need to update.
      */
-    ProjectDto updateAccount(ProjectUpdateDto projectUpdateDto, Long projectId);
+    ProjectDto updateProject(ProjectUpdateDto projectUpdateDto, Long projectId);
+
+    /**
+     * deleteAccountByAccountId method. Deletes account by id.
+     *
+     * @param projectId Id of account we need to delete.
+     */
+    void deleteProjectById(Long projectId);
 
 }

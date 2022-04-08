@@ -15,10 +15,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
-  Optional<Project> findProjectByIdAndUser(Long projectId, User authenticatedUser);
+  Optional<Project> findProjectByIdAndUserAndDeleted(Long projectId, User authenticatedUser, boolean isDeleted);
 
   List<Project> findProjectsByUser(User authenticatedUser);
 
-  Optional<Project> findProjectById(Long projectId);
+  Optional<Project> findProjectByIdAndDeleted(Long projectId, boolean isDeleted);
 
 }
