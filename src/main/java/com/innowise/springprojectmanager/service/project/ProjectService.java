@@ -46,9 +46,9 @@ import java.util.List;
     ProjectDto updateProject(ProjectUpdateDto projectUpdateDto, Long projectId);
 
     /**
-     * deleteAccountByAccountId method. Deletes account by id.
+     * deleteProjectByProjectId method. Deletes project by id.
      *
-     * @param projectId Id of account we need to delete.
+     * @param projectId Id of project we need to delete.
      */
     void deleteProjectById(Long projectId);
 
