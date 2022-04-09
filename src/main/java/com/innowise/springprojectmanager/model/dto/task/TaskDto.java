@@ -43,10 +43,6 @@ public class TaskDto {
   @Schema(description = "ExpiresAt field of Task. Contain time and date of expiration.")
   private Date expiresAt;
 
-  @JsonProperty(DtoJsonProperty.DELETED)
-  @Schema(description = "Deleted flag of Task.")
-  private String deleted;
-
   @JsonProperty(DtoJsonProperty.COMPLETED)
   @Schema(description = "Completed flag of Task.")
   private String completed;

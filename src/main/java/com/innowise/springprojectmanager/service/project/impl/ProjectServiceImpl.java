@@ -8,6 +8,7 @@ import com.innowise.springprojectmanager.model.entity.Project;
 import com.innowise.springprojectmanager.model.entity.Task;
 import com.innowise.springprojectmanager.model.entity.User;
 import com.innowise.springprojectmanager.model.enumeration.Role;
+import com.innowise.springprojectmanager.model.enumeration.SortBy;
 import com.innowise.springprojectmanager.repository.ProjectRepository;
 import com.innowise.springprojectmanager.repository.TaskRepository;
 import com.innowise.springprojectmanager.service.project.ProjectService;
@@ -19,6 +20,7 @@ import com.innowise.springprojectmanager.utils.literal.ExceptionMessage;
 import com.innowise.springprojectmanager.utils.literal.LogMessage;
 import com.innowise.springprojectmanager.utils.mapper.project.ProjectDtoMapper;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -155,11 +157,11 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
-  public List<ProjectDto> findAllProjects() {
-    return getProjectDtos();
+  public List<ProjectDto> findAndSortAllProjects(String sortBy, String issuedAtMin, String issuedAtMax) {
+    return filterAndSortProjects(getProjectDtos(), sortBy, issuedAtMin, issuedAtMax);
   }
 
-  private List<ProjectDto> getProjectDtos() {
+  private List<Project> getProjectDtos() {
     User authenticatedUser = jwtDecoder.getLoggedUser();
     List<Project> projects;
 
@@ -169,6 +171,35 @@ public class ProjectServiceImpl implements ProjectService {
       projects = projectRepository.findAll();
     }
 
-    return projects.stream().map(projectDtoMapper::toDto).collect(Collectors.toList());
+    return projects;
+  }
+
+  private List<ProjectDto> filterAndSortProjects(List<Project> projects, String sortBy, String issuedAtMin, String issuedAtMax){
+    if(sortBy != null && sortBy.equals(SortBy.TITLE_ASC.getSortString())) {
+      projects = projects.stream().sorted(Comparator.comparing(Project::getTitle))
+          .collect(Collectors.toList());
+    } else if(sortBy != null && sortBy.equals(SortBy.TITLE_DESC.getSortString())){
+      projects = projects.stream()
+          .sorted(Comparator.comparing(Project::getTitle)
+          .reversed())
+          .collect(Collectors.toList());
+    }
+
+    if(issuedAtMin != null && !issuedAtMin.isEmpty()){
+      projects = projects.stream()
+          .filter(project -> project.getIssuedAt()
+              .isAfter(dateParser.stringToLocalDateTime(issuedAtMin)))
+          .collect(Collectors.toList());
+    }
+
+    if(issuedAtMax != null && !issuedAtMax.isEmpty()){
+      projects = projects.stream()
+          .filter(project -> project.getIssuedAt()
+              .isBefore(dateParser.stringToLocalDateTime(issuedAtMax)))
+          .collect(Collectors.toList());
+    }
+
+    return projects.stream()
+        .map(projectDtoMapper::toDto).collect(Collectors.toList());
   }
 }

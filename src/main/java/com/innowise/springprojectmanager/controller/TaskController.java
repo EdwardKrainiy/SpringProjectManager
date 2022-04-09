@@ -6,6 +6,7 @@ import com.innowise.springprojectmanager.model.dto.task.TaskUpdateDto;
 import com.innowise.springprojectmanager.service.task.TaskService;
 import com.innowise.springprojectmanager.utils.JsonEntitySerializer;
 import com.innowise.springprojectmanager.utils.literal.LogMessage;
+import com.innowise.springprojectmanager.utils.literal.SortingValues;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -58,8 +60,12 @@ public class TaskController {
               message = "Accessing the resource you were trying to reach is forbidden")
       })
   @GetMapping("/{projectId}")
-  public ResponseEntity<List<TaskDto>> getAllTasks(@PathVariable("projectId") @ApiParam(name = "projectId", value = "Id of project, which tasks we need to obtain.") Long projectId) {
-    return ResponseEntity.ok(taskService.findAllTasks(projectId));
+  public ResponseEntity<List<TaskDto>> getAllTasks(@PathVariable("projectId") @ApiParam(name = "projectId", value = "Id of project, which tasks we need to obtain.") Long projectId,
+      @RequestParam(value =  SortingValues.SORT_BY, required = false) String sortBy,
+      @RequestParam(value = SortingValues.ISSUED_AT_MIN, required = false) String issuedAtMin,
+      @RequestParam(value = SortingValues.ISSUED_AT_MAX, required = false) String issuedAtMax,
+      @RequestParam(value = SortingValues.COMPLETED, required = false) String completed) {
+    return ResponseEntity.ok(taskService.findAndSortAllTasks(projectId, sortBy, issuedAtMin, issuedAtMax, completed));
   }
 
   /**
@@ -205,5 +211,33 @@ public class TaskController {
           Long taskId) {
     taskService.deleteTaskById(taskId, projectId);
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+  }
+
+  /**
+   * completeTask endpoint.
+   *
+   * @param projectId id of project, which task we want to complete.
+   * @param taskId id of task, which we want to complete.
+   * @return ResponseEntity 200 HTTP code.
+   */
+  @ApiOperation(value = "Complete task.", notes = "Completes task of project with id we noted.")
+  @ApiResponses(
+      value = {
+          @ApiResponse(code = 200, message = "Successfully completed task."),
+          @ApiResponse(
+              code = 403,
+              message = "Accessing the resource you were trying to reach is forbidden"),
+          @ApiResponse(code = 404, message = "Task or project not found.")
+      })
+  @Transactional
+  @ResponseStatus(value = HttpStatus.OK)
+  @DeleteMapping("/complete/{projectId}/{taskId}")
+  public ResponseEntity<Void> completeTaskById(
+      @PathVariable("projectId") @ApiParam(name = "projectId", value = "Id of project, which task we want to complete.")
+          Long projectId,
+      @PathVariable("taskId") @ApiParam(name = "taskId", value = "Id of task, which we want to complete.")
+          Long taskId) {
+    taskService.completeTask(taskId, projectId);
+    return ResponseEntity.status(HttpStatus.OK).build();
   }
 }
