@@ -231,7 +231,7 @@ public class TaskController {
       })
   @Transactional
   @ResponseStatus(value = HttpStatus.OK)
-  @DeleteMapping("/complete/{projectId}/{taskId}")
+  @GetMapping("/complete/{projectId}/{taskId}")
   public ResponseEntity<Void> completeTaskById(
       @PathVariable("projectId") @ApiParam(name = "projectId", value = "Id of project, which task we want to complete.")
           Long projectId,
