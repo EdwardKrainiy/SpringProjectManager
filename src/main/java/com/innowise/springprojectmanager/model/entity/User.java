@@ -54,7 +54,7 @@ public class User {
   @Column(name = JpaMappingDetails.ACTIVATED)
   private boolean activated;
 
-  @Column(name= JpaMappingDetails.IS_DELETED)
+  @Column(name= JpaMappingDetails.DELETED)
   private boolean isDeleted;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = JpaMappingDetails.USER)

@@ -1,5 +1,6 @@
 package com.innowise.springprojectmanager.service.user.impl;
 
+import com.innowise.springprojectmanager.model.dto.user.UserDto;
 import com.innowise.springprojectmanager.model.dto.user.UserSignInDto;
 import com.innowise.springprojectmanager.model.dto.user.UserSignUpDto;
 import com.innowise.springprojectmanager.model.entity.User;
@@ -7,7 +8,7 @@ import com.innowise.springprojectmanager.model.enumeration.Role;
 import com.innowise.springprojectmanager.repository.UserRepository;
 import com.innowise.springprojectmanager.security.jwt.authentication.JwtAuthenticationByUserDetails;
 import com.innowise.springprojectmanager.security.jwt.provider.TokenProvider;
-import com.innowise.springprojectmanager.service.UserService;
+import com.innowise.springprojectmanager.service.user.UserService;
 import com.innowise.springprojectmanager.service.mail.EmailService;
 import com.innowise.springprojectmanager.utils.JwtDecoder;
 import com.innowise.springprojectmanager.utils.exception.EntityNotFoundException;
@@ -15,8 +16,11 @@ import com.innowise.springprojectmanager.utils.exception.ValidationException;
 import com.innowise.springprojectmanager.utils.literal.ExceptionMessage;
 import com.innowise.springprojectmanager.utils.literal.LogMessage;
 import com.innowise.springprojectmanager.utils.literal.PropertySourceClasspath;
-import com.innowise.springprojectmanager.utils.mapper.UserSignUpDtoMapper;
+import com.innowise.springprojectmanager.utils.mapper.user.UserDtoMapper;
+import com.innowise.springprojectmanager.utils.mapper.user.UserSignUpDtoMapper;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,6 +48,7 @@ public class UserServiceImpl implements UserService {
   private final PasswordEncoder encoder;
   private final JwtDecoder jwtDecoder;
   private final EmailService emailService;
+  private final UserDtoMapper userDtoMapper;
 
   @Value("${mail.confirmation.message}")
   private String confirmMessage;
@@ -63,6 +68,11 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public boolean isUserDeleted(User user) {
+    return user.isDeleted();
+  }
+
+  @Override
   public ResponseEntity<String> authenticateUser(UserSignInDto userSignInDto) {
     User userToSignIn;
     Optional<User> userToSignInOptional =
@@ -74,11 +84,11 @@ public class UserServiceImpl implements UserService {
     } else {
       userToSignIn = userToSignInOptional.get();
     }
-    if (isUserActivated(userToSignIn)) {
+    if (isUserActivated(userToSignIn) && !isUserDeleted(userToSignIn)) {
       return jwtAuthenticationByUserDetails.authenticate(userSignInDto);
     } else {
-      log.error(String.format(LogMessage.USER_NOT_ACTIVATED_LOG, userToSignIn.getUsername()));
-      throw new ValidationException(ExceptionMessage.USER_NOT_ACTIVATED);
+      log.error(String.format(LogMessage.USER_NOT_ACTIVATED_OR_DELETED_LOG, userToSignIn.getUsername()));
+      throw new ValidationException(ExceptionMessage.USER_NOT_ACTIVATED_OR_DELETED);
     }
   }
 
@@ -141,5 +151,44 @@ public class UserServiceImpl implements UserService {
     emailService.sendEmail(
         activatedUser.getEmail(), successfulConfirmationTitle, successfulConfirmationMessage);
     log.info(String.format(LogMessage.MESSAGE_SENT_LOG, activatedUser.getEmail()));
+  }
+
+  @Override
+  public List<UserDto> findAllUsers() {
+    List<User> users;
+    users = userRepository.findAll();
+    return users.stream().map(userDtoMapper::toDto).collect(Collectors.toList());
+  }
+
+  @Override
+  public UserDto findUserByUserId(Long userId) {
+    Optional<User> foundUser =  userRepository.findUserById(userId);
+
+    if (foundUser.isPresent()) {
+      return userDtoMapper.toDto(foundUser.get());
+    } else {
+      log.error(String.format(LogMessage.USER_NOT_FOUND_LOG, userId));
+      throw new EntityNotFoundException(ExceptionMessage.USER_NOT_FOUND);
+    }
+  }
+
+  @Override
+  public void deleteUserByUserId(Long userId) {
+    User authenticatedUser = jwtDecoder.getLoggedUser();
+    Optional<User> userToDeleteOptional = userRepository.findUserById(userId);
+
+    if (!userToDeleteOptional.isPresent()) {
+      log.error(String.format(LogMessage.USER_NOT_FOUND_LOG, userId));
+      throw new EntityNotFoundException(ExceptionMessage.USER_NOT_FOUND);
+    } else {
+      User userToDelete = userToDeleteOptional.get();
+      if(authenticatedUser.getId() == userToDelete.getId()) {
+        log.error(String.format(LogMessage.USER_CANNOT_DELETE_HIMSELF_LOG, userId));
+        throw new EntityNotFoundException(ExceptionMessage.USER_CANNOT_DELETE_HIMSELF);
+      }
+      userToDelete.setDeleted(true);
+      log.info(String.format(LogMessage.USER_DELETED_LOG, userToDelete.getId()));
+      userRepository.save(userToDelete);
+      }
   }
 }
