@@ -55,5 +55,5 @@ public class Task {
   private boolean isCompleted;
 
   @Column(name = JpaMappingDetails.DELETED)
-  private boolean isDeleted;
+  private boolean deleted;
 }

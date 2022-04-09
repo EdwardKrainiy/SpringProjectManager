@@ -51,7 +51,7 @@ public class Project {
   private LocalDateTime issuedAt;
 
   @Column(name = JpaMappingDetails.DELETED)
-  private boolean isDeleted;
+  private boolean deleted;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = JpaMappingDetails.PROJECT)
   private Set<Task> tasks;

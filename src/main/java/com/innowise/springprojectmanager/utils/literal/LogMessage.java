@@ -26,6 +26,8 @@ public class LogMessage {
   public static final String ID_OF_LOGGED_USER_NOT_EQUALS_ID_OF_PROJECT_LOG =  "Id of logged user not equals id of project. Id of logged User: %d, Id of project user: %d";
   public static final String PROJECT_DELETED_LOG = "Project was deleted. Id of project: %d";
   public static final String PROJECT_UPDATED_LOG = "Account was updated. Id of account: %d";
+  public static final String TASK_NOT_FOUND_LOG = "Task not found. Id of task: %d";
+  public static final String TASK_DELETED_LOG = "Task was deleted. Id of task: %d";
 
   private LogMessage() {}
 }

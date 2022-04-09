@@ -14,6 +14,7 @@ public class ExceptionMessage {
   public static final String USER_CANNOT_DELETE_HIMSELF = "User can't delete himself!";
   public static final String PROJECT_NOT_FOUND = "Project not found!";
   public static final String ID_OF_LOGGED_USER_NOT_EQUALS_ID_OF_PROJECT =  "Id of this project is not equals id of logged user!";
+  public static final String TASK_NOT_FOUND = "Task not found!";
 
   private ExceptionMessage() {}
 }

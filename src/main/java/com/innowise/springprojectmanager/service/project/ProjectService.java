@@ -29,10 +29,10 @@ import java.util.List;
     List<ProjectDto> findAllProjects();
 
     /**
-     * createTransaction method. Creates Transaction from transactionCreateDto.
+     * createProject method. Creates Project from projectCreateDto.
      *
      * @param projectCreateDto ProjectCreateDto object to create new Project.
-     * @return ProjectDto Obtained object of ProjectDto.
+     * @return ProjectDto Obtained id of created ProjectDto.
      */
     Long createProject(ProjectCreateDto projectCreateDto);
 

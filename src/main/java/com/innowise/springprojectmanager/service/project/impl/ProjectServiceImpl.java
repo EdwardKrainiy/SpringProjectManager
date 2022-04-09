@@ -164,7 +164,7 @@ public class ProjectServiceImpl implements ProjectService {
     List<Project> projects;
 
     if (authenticatedUser.getRole().equals(Role.USER)) {
-      projects = projectRepository.findProjectsByUser(authenticatedUser);
+      projects = projectRepository.findProjectsByUserAndDeleted(authenticatedUser, false);
     } else {
       projects = projectRepository.findAll();
     }

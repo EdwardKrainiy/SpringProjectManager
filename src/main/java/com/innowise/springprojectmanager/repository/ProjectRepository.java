@@ -17,7 +17,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
   Optional<Project> findProjectByIdAndUserAndDeleted(Long projectId, User authenticatedUser, boolean isDeleted);
 
-  List<Project> findProjectsByUser(User authenticatedUser);
+  List<Project> findProjectsByUserAndDeleted(User authenticatedUser, boolean isDeleted);
 
   Optional<Project> findProjectByIdAndDeleted(Long projectId, boolean isDeleted);
 
