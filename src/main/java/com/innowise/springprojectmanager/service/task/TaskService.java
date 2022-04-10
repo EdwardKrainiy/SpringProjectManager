@@ -24,10 +24,16 @@ public interface TaskService {
 
   /**
    * findAllTasks method. Finds all tasks, stored in DB.
+   *
    * @param projectId If of project, which tasks we need to find.
+   * @param sortBy SortBy param for sorting.
+   * @param issuedAtMin IssuedAt min value to filter.
+   * @param issuedAtMax IssuedAt min value to filter.
+   * @param completed completed param to filter.
+   *
    * @return List<TaskDto> List of all found taskDto objects.
    */
-  List<TaskDto> findAllTasks(Long projectId);
+  List<TaskDto> findAndSortAllTasks(Long projectId, String sortBy, String issuedAtMin, String issuedAtMax, String completed);
 
   /**
    * createTask method. Creates Task from taskCreateDto.
@@ -44,13 +50,20 @@ public interface TaskService {
    * @param taskUpdateDto Task transfer object, which we need to update. This one will be converted
    *                      into Task object, passed some checks and will be updated on DB.
    * @param taskId        Id of task we need to update.
+   * @param projectId     Id of project, which task we need to update.
    */
   TaskDto updateTask(TaskUpdateDto taskUpdateDto, Long taskId, Long projectId);
 
   /**
    * deleteTaskById method. Deletes task by id.
    *
+   * @param projectId Id of project, which we need to delete.
    * @param taskId Id of task we need to delete.
    */
   void deleteTaskById(Long taskId, Long projectId);
+
+  /**
+   * completeTask method. Completes task by setting Completed to TRUE.
+   */
+  Long completeTask(Long taskId, Long projectId);
 }

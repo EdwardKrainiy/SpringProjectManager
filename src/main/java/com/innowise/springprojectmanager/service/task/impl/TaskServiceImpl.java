@@ -7,6 +7,7 @@ import com.innowise.springprojectmanager.model.entity.Project;
 import com.innowise.springprojectmanager.model.entity.Task;
 import com.innowise.springprojectmanager.model.entity.User;
 import com.innowise.springprojectmanager.model.enumeration.Role;
+import com.innowise.springprojectmanager.model.enumeration.SortBy;
 import com.innowise.springprojectmanager.repository.ProjectRepository;
 import com.innowise.springprojectmanager.repository.TaskRepository;
 import com.innowise.springprojectmanager.service.task.TaskService;
@@ -18,6 +19,7 @@ import com.innowise.springprojectmanager.utils.literal.ExceptionMessage;
 import com.innowise.springprojectmanager.utils.literal.LogMessage;
 import com.innowise.springprojectmanager.utils.mapper.task.TaskDtoMapper;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -67,10 +69,13 @@ public class TaskServiceImpl implements TaskService {
   }
 
   @Override
-  public List<TaskDto> findAllTasks(Long projectId) {
+  public List<TaskDto> findAndSortAllTasks(Long projectId, String sortBy, String issuedAtMin, String issuedAtMax, String completed) {
+   return filterAndSortTasks(getAllTasks(projectId), sortBy, issuedAtMin, issuedAtMax, completed);
+  }
+
+  private List<Task> getAllTasks(Long projectId){
     User authenticatedUser = jwtDecoder.getLoggedUser();
 
-    List<Task> tasks;
     Optional<Project> foundProjectOptional;
     Project foundProject;
 
@@ -87,9 +92,41 @@ public class TaskServiceImpl implements TaskService {
       foundProject = foundProjectOptional.get();
     }
 
-    tasks = taskRepository.findTasksByProjectAndDeleted(foundProject, false);
+    return taskRepository.findTasksByProjectAndDeleted(foundProject, false);
+  }
 
-    return tasks.stream().map(taskDtoMapper::toDto).collect(Collectors.toList());
+  private List<TaskDto> filterAndSortTasks(List<Task> tasks, String sortBy, String issuedAtMin, String issuedAtMax, String completed){
+    if(sortBy != null && sortBy.equals(SortBy.TITLE_ASC.getSortString())) {
+      tasks = tasks.stream()
+          .sorted(Comparator.comparing(Task::getTitle))
+          .collect(Collectors.toList());
+    } else if(sortBy != null && sortBy.equals(SortBy.TITLE_DESC.getSortString())){
+      tasks = tasks.stream()
+          .sorted(Comparator.comparing(Task::getTitle)
+              .reversed())
+          .collect(Collectors.toList());
+    }
+
+    if(issuedAtMin != null && !issuedAtMin.isEmpty()){
+      tasks = tasks.stream()
+          .filter(project -> project.getIssuedAt().isAfter(dateParser.stringToLocalDateTime(issuedAtMin)))
+          .collect(Collectors.toList());
+    }
+
+    if(issuedAtMax != null && !issuedAtMax.isEmpty()){
+      tasks = tasks.stream()
+          .filter(project -> project.getIssuedAt().isBefore(dateParser.stringToLocalDateTime(issuedAtMax)))
+          .collect(Collectors.toList());
+    }
+
+    if(completed != null && !completed.isEmpty()){
+      tasks = tasks.stream()
+          .filter(task -> task.isCompleted() == Boolean.parseBoolean(completed))
+          .collect(Collectors.toList());
+    }
+
+    return tasks.stream().map(taskDtoMapper::toDto)
+        .collect(Collectors.toList());
   }
 
   @Override
@@ -193,5 +230,39 @@ public class TaskServiceImpl implements TaskService {
         taskRepository.save(taskToDelete);
       }
     }
+  }
+
+  @Override
+  public Long completeTask(Long taskId, Long projectId) {
+    Optional<Project> foundProjectOptional;
+    Project foundProject;
+
+    User authenticatedUser = jwtDecoder.getLoggedUser();
+
+    if(authenticatedUser.getRole().equals(Role.USER)){
+      foundProjectOptional = projectRepository.findProjectByIdAndUserAndDeleted(projectId, authenticatedUser, false);
+    } else {
+      foundProjectOptional = projectRepository.findProjectByIdAndDeleted(projectId, false);
+    }
+
+    if (!foundProjectOptional.isPresent()) {
+      log.error(String.format(LogMessage.PROJECT_NOT_FOUND_LOG, projectId));
+      throw new EntityNotFoundException(ExceptionMessage.PROJECT_NOT_FOUND);
+    } else {
+      foundProject = foundProjectOptional.get();
+    }
+
+    Optional<Task> taskToCompleteOptional = taskRepository.findTaskByIdAndProjectAndDeleted(taskId, foundProject, false);
+    Task taskToComplete;
+    if (!taskToCompleteOptional.isPresent()) {
+      log.error(String.format(LogMessage.TASK_NOT_FOUND_LOG, projectId));
+      throw new EntityNotFoundException(ExceptionMessage.TASK_NOT_FOUND);
+    } else {
+      taskToComplete = taskToCompleteOptional.get();
+    }
+
+    taskToComplete.setCompleted(true);
+
+    return taskDtoMapper.toDto(taskRepository.save(taskToComplete)).getId();
   }
 }

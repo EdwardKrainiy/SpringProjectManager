@@ -41,8 +41,4 @@ public class UserDto {
   @JsonProperty(DtoJsonProperty.ACTIVATED)
   @Schema(description = "Activated flag of User.")
   private String activated;
-
-  @JsonProperty(DtoJsonProperty.DELETED)
-  @Schema(description = "Deleted flag of User.")
-  private String deleted;
 }

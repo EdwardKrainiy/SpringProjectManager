@@ -19,6 +19,7 @@ import com.innowise.springprojectmanager.utils.literal.PropertySourceClasspath;
 import com.innowise.springprojectmanager.utils.mapper.user.UserDtoMapper;
 import com.innowise.springprojectmanager.utils.mapper.user.UserSignUpDtoMapper;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -182,7 +183,7 @@ public class UserServiceImpl implements UserService {
       throw new EntityNotFoundException(ExceptionMessage.USER_NOT_FOUND);
     } else {
       User userToDelete = userToDeleteOptional.get();
-      if(authenticatedUser.getId() == userToDelete.getId()) {
+      if(Objects.equals(authenticatedUser.getId(), userToDelete.getId())) {
         log.error(String.format(LogMessage.USER_CANNOT_DELETE_HIMSELF_LOG, userId));
         throw new EntityNotFoundException(ExceptionMessage.USER_CANNOT_DELETE_HIMSELF);
       }

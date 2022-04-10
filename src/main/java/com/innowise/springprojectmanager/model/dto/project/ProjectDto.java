@@ -41,10 +41,6 @@ public class ProjectDto {
   @Schema(description = "IssuedAt field of Project. Contain time and date of creation.")
   private Date issuedAt;
 
-  @JsonProperty(DtoJsonProperty.DELETED)
-  @Schema(description = "Deleted flag of Project.")
-  private String deleted;
-
   @JsonProperty(DtoJsonProperty.TASKS)
   @Schema(description = "Tasks of Project.")
   private Set<TaskDto> tasks;

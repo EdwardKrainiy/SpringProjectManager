@@ -22,11 +22,14 @@ import java.util.List;
     ProjectDto findProjectById(Long projectId);
 
     /**
-     * findAllProjects method. Finds all projects, stored in DB.
+     * findAndSortAllProjects method. Finds all projects, stored in DB, and sorts them.
      *
+     * @param sortBy SortBy param for sorting.
+     * @param issuedAtMin IssuedAt min value to filter.
+     * @param issuedAtMax IssuedAt min value to filter.
      * @return List<ProjectDto> List of all found projectDto objects.
      */
-    List<ProjectDto> findAllProjects();
+    List<ProjectDto> findAndSortAllProjects(String sortBy, String issuedAtMax, String issuedAtMin);
 
     /**
      * createProject method. Creates Project from projectCreateDto.

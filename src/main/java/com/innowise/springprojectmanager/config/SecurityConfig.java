@@ -45,10 +45,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .hasAuthority(Role.ADMIN.name())
         .antMatchers("/api/users/*")
         .hasAuthority(Role.ADMIN.name())
-        .antMatchers("/*")
-        .permitAll()
         .antMatchers("/api/projects/*")
         .hasAnyAuthority(Role.ADMIN.name(), Role.USER.name())
+        .antMatchers("/api/projects")
+        .hasAnyAuthority(Role.ADMIN.name(), Role.USER.name())
+        .antMatchers("/api/tasks/*")
+        .hasAnyAuthority(Role.ADMIN.name(), Role.USER.name())
+        .antMatchers("/api/tasks")
+        .hasAnyAuthority(Role.ADMIN.name(), Role.USER.name())
+        .antMatchers("/*")
+        .permitAll()
         .anyRequest()
         .permitAll();
 

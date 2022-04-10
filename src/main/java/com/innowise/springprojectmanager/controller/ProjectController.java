@@ -6,6 +6,7 @@ import com.innowise.springprojectmanager.model.dto.project.ProjectUpdateDto;
 import com.innowise.springprojectmanager.service.project.ProjectService;
 import com.innowise.springprojectmanager.utils.JsonEntitySerializer;
 import com.innowise.springprojectmanager.utils.literal.LogMessage;
+import com.innowise.springprojectmanager.utils.literal.SortingValues;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -59,8 +61,11 @@ public class ProjectController {
               message = "Accessing the resource you were trying to reach is forbidden")
       })
   @GetMapping
-  public ResponseEntity<List<ProjectDto>> getAllProjects() {
-    return ResponseEntity.ok(projectService.findAllProjects());
+  public ResponseEntity<List<ProjectDto>> getAllProjects(
+      @RequestParam(value =  SortingValues.SORT_BY, required = false) String sortBy,
+      @RequestParam(value = SortingValues.ISSUED_AT_MIN, required = false) String issuedAtMin,
+      @RequestParam(value = SortingValues.ISSUED_AT_MAX, required = false) String issuedAtMax) {
+    return ResponseEntity.ok(projectService.findAndSortAllProjects(sortBy, issuedAtMin, issuedAtMax));
   }
 
   /**
@@ -161,7 +166,8 @@ public class ProjectController {
           value = "Dto of project, which we use to update other project.")
           ProjectUpdateDto projectUpdateDto,
       @PathVariable("id") @ApiParam(name = "id", value = "Id of project we want to update.")
-          Long projectId) {
+          Long projectId)
+  {
 
     if (log.isDebugEnabled()) {
       log.debug(
