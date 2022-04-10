@@ -73,6 +73,25 @@ public interface UserService {
   UserDto findUserByUserId(Long userId);
 
   /**
+   * findUserByUsername method. Finds user by username.
+   *
+   * @param username Username of the user we need to get from DB.
+   * @return User Found by username User object. If user wasn't found, it will throw
+   *     UserNotFoundException.
+   */
+  User findUserByUsername(String username);
+
+  /**
+   * findUserByUsernameAndPassword method. Finds user by username and password.
+   *
+   * @param username Username of the user we need to get from DB.
+   * @param password Password of the user we need to get from DB.
+   * @return User Found by username and password User object. If user wasn't found, it will throw
+   *     UserNotFoundException.
+   */
+  User findUserByUsernameAndPassword(String username, String password);
+
+  /**
    * deleteUserByUserId method. Deletes user by id.
    *
    * @param userId Id of user we need to delete.

@@ -8,10 +8,11 @@ import com.innowise.springprojectmanager.model.enumeration.Role;
 import com.innowise.springprojectmanager.repository.UserRepository;
 import com.innowise.springprojectmanager.security.jwt.authentication.JwtAuthenticationByUserDetails;
 import com.innowise.springprojectmanager.security.jwt.provider.TokenProvider;
-import com.innowise.springprojectmanager.service.user.UserService;
 import com.innowise.springprojectmanager.service.mail.EmailService;
+import com.innowise.springprojectmanager.service.user.UserService;
 import com.innowise.springprojectmanager.utils.JwtDecoder;
 import com.innowise.springprojectmanager.utils.exception.EntityNotFoundException;
+import com.innowise.springprojectmanager.utils.exception.IncorrectPasswordException;
 import com.innowise.springprojectmanager.utils.exception.ValidationException;
 import com.innowise.springprojectmanager.utils.literal.ExceptionMessage;
 import com.innowise.springprojectmanager.utils.literal.LogMessage;
@@ -159,6 +160,26 @@ public class UserServiceImpl implements UserService {
     List<User> users;
     users = userRepository.findAll();
     return users.stream().map(userDtoMapper::toDto).collect(Collectors.toList());
+  }
+
+  @Override
+  public User findUserByUsername(String username) {
+    return userRepository
+        .findUserByUsername(username)
+        .orElseThrow(() -> new EntityNotFoundException(ExceptionMessage.USER_NOT_FOUND));
+  }
+
+  @Override
+  public User findUserByUsernameAndPassword(String username, String password) {
+
+    User foundUser =
+        userRepository
+            .findUserByUsername(username)
+            .orElseThrow(() -> new EntityNotFoundException(ExceptionMessage.USER_NOT_FOUND));
+
+    if (foundUser.getPassword().equals(password)) {
+      return foundUser;
+    } else throw new IncorrectPasswordException(username);
   }
 
   @Override
